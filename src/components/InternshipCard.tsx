@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 const InternshipCard = () => {
   const openMail = () => {
-    window.open('mailto:raphaelgiraud12@gmail.com', '_blank');
+    window.open('mailto:s.nameer18606@gmail.com', '_blank');
   };
   const router = useRouter();
 
@@ -30,10 +30,10 @@ const InternshipCard = () => {
           </div>
           <div>
             <h2 className="text-foreground text-2xl font-semibold">
-              Raphael Giraud
+              Nameer Ali
             </h2>
             <p className="text-muted-foreground text-sm">
-              Intership Application
+              Job Application
             </p>
           </div>
         </div>
@@ -66,7 +66,7 @@ const InternshipCard = () => {
           <div>
             <p className="text-foreground text-sm font-medium">Location</p>
             <p className="text-muted-foreground text-sm">
-              Preferably San Francisco 🇺🇸
+              Preferably Karachi PK
             </p>
           </div>
         </div>
@@ -78,7 +78,7 @@ const InternshipCard = () => {
             <p className="text-foreground text-sm font-medium">Tech stack</p>
             <div className="text-muted-foreground grid grid-cols-1 gap-y-1 text-sm sm:grid-cols-2">
               <ul className="decoration-none list-disc pl-4">
-                <li>Python, Next.js, TypeScript, Tailwind CSS</li>
+                <li>Python, Java, Spring Boot, FastAPI</li>
                 <li>Vercel AI SDK, Supabase, Prisma</li>
                 <li>OpenAI, Mistral, Claude, Whisper</li>
                 <li>Prompt engineering, fine-tuning</li>

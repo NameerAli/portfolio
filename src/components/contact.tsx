@@ -7,34 +7,34 @@ import { ChevronRight } from 'lucide-react';
 export function Contact() {
   // Contact information
   const contactInfo = {
-    name: 'Raphael Giraud',
-    email: 'raphaelgiraud12@gmail.com',
+    name: 'Syed Nameer Ali',
+    email: 's.nameer18606@gmail.com',
     handle: '@Raphael.Giraud',
     socials: [
       {
         name: 'LinkedIn',
-        url: 'https://www.linkedin.com/in/raphael-giraud-60939519a/',
+        url: 'https://www.linkedin.com/in/syednameerali',
       },
-      {
-        name: 'Youtube',
-        url: 'https://www.youtube.com/@toukoum',
-      },
-      {
-        name: 'Instagram',
-        url: 'https://www.instagram.com/raphael.giraud/',
-      },
-      {
-        name: 'Discord',
-        url: 'https://discord.com/users/toukoum',
-      },
+      // {
+      //   name: 'Youtube',
+      //   url: 'https://www.youtube.com/@toukoum',
+      // },
+      // {
+      //   name: 'Instagram',
+      //   url: 'https://www.instagram.com/raphael.giraud/',
+      // },
+      // {
+      //   name: 'Discord',
+      //   url: 'https://discord.com/users/toukoum',
+      // },
       {
         name: 'Github',
-        url: 'https://github.com/toukoum',
+        url: 'https://github.com/nameerali',
       },
-      {
-        name: 'X',
-        url: 'https://x.com/toukoumcode',
-      },
+      // {
+      //   name: 'X',
+      //   url: 'https://x.com/toukoumcode',
+      // },
     ],
   };
 
