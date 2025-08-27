@@ -166,14 +166,6 @@ const Chat = () => {
     setLoadingSubmit(false);
   };
 
-  // handle preloaded query from searchParams
-  useEffect(() => {
-    if (initialQuery && !autoSubmitted) {
-      setAutoSubmitted(true);
-      submitQuery(initialQuery);
-    }
-  }, [initialQuery, autoSubmitted]);
-
   useEffect(() => {
     if (!videoRef.current) return;
     if (isTalking) {

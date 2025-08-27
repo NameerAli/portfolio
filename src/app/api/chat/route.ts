@@ -23,6 +23,7 @@ function errorHandler(error: unknown): string {
   }
 }
 
+// Define all tools in a single object
 const tools = {
   getProjects,
   getPresentation,
@@ -34,15 +35,40 @@ const tools = {
   getInternship,
 };
 
-const model = groq('qwen/qwen3-32b');
+//Model selection
+const model = groq('openai/gpt-oss-20b');
+
+// Correct validation for AI SDK tools
+const validateTools = () => {
+  const toolNames = Object.keys(tools);
+  console.log('Available tools:', toolNames);
+  
+  for (const [name, tool] of Object.entries(tools)) {
+    // Check if tool is an object (not null)
+    if (!tool || typeof tool !== 'object') {
+      throw new Error(`Tool ${name} is not properly defined - must be an object`);
+    }
+    
+    // Check if tool has execute function (AI SDK tools)
+    if (typeof tool.execute !== 'function') {
+      throw new Error(`Tool ${name} is missing execute function`);
+    }
+    
+    // Check if tool has inputSchema (required for AI SDK tools)
+    if (!tool.inputSchema) {
+      throw new Error(`Tool ${name} is missing inputSchema`);
+    }
+  }
+};
+
 
 export async function POST(req: Request) {
   try {
+    validateTools();
     let body: { messages?: UIMessage[] };
     
     try {
       body = await req.json();
-      console.log('Incoming request body messages:', body.messages);
     } catch (jsonErr) {
       console.error('Failed to parse JSON body:', jsonErr);
       return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
@@ -61,7 +87,6 @@ export async function POST(req: Request) {
 
     // Convert UI messages to model messages
     const modelMessages = convertToModelMessages(body.messages);
-    console.log('Model messages after conversion and system prompt addition:', modelMessages);
     
     // Add system prompt if not already present
     const hasSystemMessage = modelMessages.some(msg => msg.role === 'system');
@@ -78,9 +103,13 @@ export async function POST(req: Request) {
       model,
       messages: modelMessages,
       tools,
+      // Add error handling
+      onError: ({ error }) => {
+        console.error('StreamText error:', error);
+      },
     });
-    console.log('Received streamText result:', result);
-    return result.toUIMessageStream();
+
+    return result.toUIMessageStreamResponse();
 
   } catch (err) {
     console.error('Unexpected global error in POST handler:', err);
