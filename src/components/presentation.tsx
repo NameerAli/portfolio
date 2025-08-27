@@ -19,26 +19,20 @@ export function Presentation() {
   };
 
   // Animation variants for text elements
-  const textVariants = {
+    const textVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: 'easeOut' },
     },
   };
 
   // Animation for the entire paragraph rather than word-by-word
-  const paragraphAnimation = {
+    const paragraphAnimation = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        ease: 'easeOut',
-        delay: 0.2,
-      },
     },
   };
 
@@ -51,7 +45,6 @@ export function Presentation() {
             <motion.div
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
               className="h-full w-full"
             >
               <Image
@@ -100,7 +93,6 @@ export function Presentation() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
             className="mt-4 flex flex-wrap gap-2"
           >
             {['AI', 'Developer', 'Karachi', 'Sport', 'SaaS Builder'].map(

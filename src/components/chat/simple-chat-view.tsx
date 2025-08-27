@@ -4,63 +4,69 @@ import {
   ChatBubble,
   ChatBubbleMessage,
 } from '@/components/ui/chat/chat-bubble';
-import { ChatRequestOptions } from 'ai';
-import { Message } from 'ai/react';
+import { UIMessage } from 'ai';
 import { motion } from 'framer-motion';
 import ChatMessageContent from './chat-message-content';
 import ToolRenderer from './tool-renderer';
 
 interface SimplifiedChatViewProps {
-  message: Message;
+  message: UIMessage;
   isLoading: boolean;
-  reload: (
-    chatRequestOptions?: ChatRequestOptions
-  ) => Promise<string | null | undefined>;
-  addToolResult?: (args: { toolCallId: string; result: string }) => void;
+  addToolResult?: (args: { 
+    tool: string; 
+    toolCallId: string; 
+    output: unknown; 
+  }) => Promise<void>;
 }
+
 
 const MOTION_CONFIG = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: 20 },
-  transition: {
-    duration: 0.3,
-    ease: 'easeOut',
-  },
 };
+
+// ✅ Type guard for tool parts with state
+function isToolPartWithState(part: any): part is { type: string; state: string; [key: string]: any } {
+  return part && 
+         typeof part === 'object' && 
+         'state' in part && 
+         typeof part.state === 'string' &&
+         part.type?.startsWith('tool-');
+}
+
+// ✅ Type guard for text parts
+function isTextPart(part: any): part is { type: 'text'; text: string } {
+  return part && part.type === 'text' && typeof part.text === 'string';
+}
 
 export function SimplifiedChatView({
   message,
   isLoading,
-  reload,
   addToolResult,
 }: SimplifiedChatViewProps) {
   if (message.role !== 'assistant') return null;
 
-  // Extract tool invocations that are in "result" state
-  const toolInvocations =
-    message.parts
-      ?.filter(
-        (part) =>
-          part.type === 'tool-invocation' &&
-          part.toolInvocation?.state === 'result'
-      )
-      .map((part) =>
-        part.type === 'tool-invocation' ? part.toolInvocation : null
-      )
-      .filter(Boolean) || [];
+  // ✅ Safely filter tool parts using type guard
+  const toolParts = message.parts?.filter((part) => 
+    isToolPartWithState(part) && part.state === 'output-available'
+  ) || [];
+
+  // ✅ Safely filter text parts
+  const textParts = message.parts?.filter((part) => 
+    isTextPart(part) && part.text.trim().length > 0
+  ) || [];
 
   // Only display the first tool (if any)
-  const currentTool = toolInvocations.length > 0 ? [toolInvocations[0]] : [];
-
-  const hasTextContent = message.content.trim().length > 0;
+  const currentTool = toolParts.length > 0 ? [toolParts[0]] : [];
+  const hasTextContent = textParts.length > 0;
   const hasTools = currentTool.length > 0;
 
   console.log('currentTool', currentTool);
+  console.log('message.parts', message.parts);
 
   return (
     <motion.div {...MOTION_CONFIG} className="flex h-full w-full flex-col px-4">
-      {/* Single scrollable container for both tool and text content */}
       <div className="custom-scrollbar flex h-full w-full flex-col overflow-y-auto">
         {/* Tool invocation result - displayed at the top */}
         {hasTools && (
@@ -81,7 +87,6 @@ export function SimplifiedChatView({
                   message={message}
                   isLast={true}
                   isLoading={isLoading}
-                  reload={reload}
                   addToolResult={addToolResult}
                   skipToolRendering={true}
                 />
@@ -90,7 +95,6 @@ export function SimplifiedChatView({
           </div>
         )}
 
-        {/* Add some padding at the bottom for better scrolling experience */}
         <div className="pb-4"></div>
       </div>
     </motion.div>

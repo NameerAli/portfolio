@@ -1,6 +1,6 @@
 'use client';
 
-import { Message } from 'ai/react';
+import { UIMessage } from '@ai-sdk/react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -12,11 +12,15 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
 export type ChatMessageContentProps = {
-  message: Message;
+  message: UIMessage;
   isLast?: boolean;
   isLoading?: boolean;
-  reload?: () => Promise<string | null | undefined>;
-  addToolResult?: (args: { toolCallId: string; result: string }) => void;
+  regenerate?: (options?: { messageId?: string }) => void; // ✅ Updated from 'reload'
+  addToolResult?: (args: { 
+    tool: string; 
+    toolCallId: string; 
+    output: unknown; 
+  }) => Promise<void>; // ✅ Updated signature for v5
   skipToolRendering?: boolean;
 };
 

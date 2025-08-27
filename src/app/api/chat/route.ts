@@ -1,14 +1,14 @@
 import { groq } from '@ai-sdk/groq';
-import { streamText } from 'ai';
+import { streamText, convertToModelMessages, UIMessage, SystemModelMessage } from 'ai'; // Add SystemModelMessage import
 import { SYSTEM_PROMPT } from './prompt';
 import { getContact } from './tools/getContact';
 import { getCrazy } from './tools/getCrazy';
-import { getInternship } from './tools/getIntership';
+import { getInternship } from './tools/getInternship';
 import { getPresentation } from './tools/getPresentation';
 import { getProjects } from './tools/getProjects';
 import { getResume } from './tools/getResume';
 import { getSkills } from './tools/getSkills';
-import { getSports } from './tools/getSport';
+import { getSports } from './tools/getSports';
 
 export const maxDuration = 30;
 
@@ -23,7 +23,6 @@ function errorHandler(error: unknown): string {
   }
 }
 
-
 const tools = {
   getProjects,
   getPresentation,
@@ -37,20 +36,13 @@ const tools = {
 
 const model = groq('qwen/qwen3-32b');
 
-function isValidMessage(message: any): message is { role: string; content: string } {
-  return (
-    message &&
-    typeof message === 'object' &&
-    typeof message.role === 'string' &&
-    typeof message.content === 'string'
-  );
-}
-
 export async function POST(req: Request) {
   try {
-    let body: any;
+    let body: { messages?: UIMessage[] };
+    
     try {
       body = await req.json();
+      console.log('Incoming request body messages:', body.messages);
     } catch (jsonErr) {
       console.error('Failed to parse JSON body:', jsonErr);
       return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
@@ -67,29 +59,28 @@ export async function POST(req: Request) {
       });
     }
 
-    const sanitizedMessages = body.messages.filter(isValidMessage);
-
-    if (sanitizedMessages.length === 0) {
-      console.error('No valid messages found after sanitization:', body.messages);
-      return new Response(JSON.stringify({ error: 'No valid messages provided' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    // Convert UI messages to model messages
+    const modelMessages = convertToModelMessages(body.messages);
+    console.log('Model messages after conversion and system prompt addition:', modelMessages);
+    
+    // Add system prompt if not already present
+    const hasSystemMessage = modelMessages.some(msg => msg.role === 'system');
+    if (!hasSystemMessage && SYSTEM_PROMPT) {
+      // ✅ Use explicit type annotation
+      const systemMessage: SystemModelMessage = {
+        role: 'system',
+        content: typeof SYSTEM_PROMPT === 'string' ? SYSTEM_PROMPT : SYSTEM_PROMPT.content
+      };
+      modelMessages.unshift(systemMessage);
     }
 
-    // Insert system prompt at the start
-    sanitizedMessages.unshift(SYSTEM_PROMPT);
-
     const result = streamText({
-    model,
-    messages: sanitizedMessages,
-    tools,
+      model,
+      messages: modelMessages,
+      tools,
     });
-
-
-    return result.toDataStreamResponse({
-      getErrorMessage: errorHandler,
-    });
+    console.log('Received streamText result:', result);
+    return result.toUIMessageStream();
 
   } catch (err) {
     console.error('Unexpected global error in POST handler:', err);
@@ -98,5 +89,5 @@ export async function POST(req: Request) {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
-  } 
+  }
 }

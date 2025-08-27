@@ -82,13 +82,10 @@ const Skills = () => {
   ];
 
   // Animation variants
-  const containerVariants = {
+    const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
     },
   };
 
@@ -97,7 +94,6 @@ const Skills = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: [0.19, 1, 0.22, 1] },
     },
   };
 
@@ -106,7 +102,6 @@ const Skills = () => {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.3, ease: 'easeOut' },
     },
   };
 
@@ -114,7 +109,6 @@ const Skills = () => {
     <motion.div
       initial={{ scale: 0.98, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
       className="mx-auto w-full max-w-5xl rounded-4xl"
     >
       <Card className="w-full border-none px-0 pb-12 shadow-none">
@@ -154,9 +148,8 @@ const Skills = () => {
                     <motion.div
                       key={idx}
                       variants={badgeVariants}
-                      whileHover={{
+                                            whileHover={{
                         scale: 1.04,
-                        transition: { duration: 0.2 },
                       }}
                     >
                       <Badge className={`border px-3 py-1.5 font-normal`}>

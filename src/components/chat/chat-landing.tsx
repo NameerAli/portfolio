@@ -45,10 +45,6 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.4,
-        ease: [0.25, 0.1, 0.25, 1],
-      },
     },
   };
 
@@ -62,7 +58,7 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
       {/* Welcome message */}
       <motion.div className="mb-8 text-center" variants={itemVariants}>
         <h2 className="mb-3 text-2xl font-semibold">
-            I'm Nameer's digital twin
+            I&apos;m Nameer&apos;s digital twin
         </h2>
         <p className="text-muted-foreground mx-auto max-w-md">
           The first portfolio that fit YOU needs.

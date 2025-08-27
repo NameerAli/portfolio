@@ -46,18 +46,16 @@ export default function Home() {
   /* hero animations (unchanged) */
   const topElementVariants = {
     hidden: { opacity: 0, y: -60 },
-    visible: {
+        visible: {
       opacity: 1,
       y: 0,
-      transition: { type: 'ease', duration: 0.8 },
     },
   };
   const bottomElementVariants = {
     hidden: { opacity: 0, y: 80 },
-    visible: {
+        visible: {
       opacity: 1,
       y: 0,
-      transition: { type: 'ease', duration: 0.8, delay: 0.2 },
     },
   };
 
@@ -129,7 +127,7 @@ export default function Home() {
         </div>
 
         <h2 className="text-secondary-foreground mt-1 text-xl font-semibold md:text-2xl">
-          Hey, I'm Nameer 👋
+          Hey, I&apos;m Nameer 👋
         </h2>
         <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
           AI Portfolio
